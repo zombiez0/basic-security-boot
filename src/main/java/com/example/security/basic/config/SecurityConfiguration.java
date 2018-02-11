@@ -34,6 +34,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
             .withUser("user").password("user").roles("USER");
     }
     
+//    @Override
+//    protected void configure(HttpSecurity httpSecurity) throws Exception
+//    {
+//        httpSecurity        
+//        .authorizeRequests()
+//        .antMatchers("/hello/").hasRole("ADMIN")
+//        .antMatchers("/demo/").hasRole("USER")
+//        .antMatchers("/allowall/").hasAnyRole("ADMIN", "USER")
+//        .anyRequest()
+//        .fullyAuthenticated()
+//        //.permitAll()  //this permits all requests       
+//        .and().httpBasic();
+//        httpSecurity.csrf().disable();
+//    }
+    
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception
     {
@@ -42,10 +57,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
         .antMatchers("/hello/").hasRole("ADMIN")
         .antMatchers("/demo/").hasRole("USER")
         .antMatchers("/allowall/").hasAnyRole("ADMIN", "USER")
-        .anyRequest()
-        .fullyAuthenticated()
+        .antMatchers("/index.html", "/", "/login").permitAll()
+        //.anyRequest()
+        //.fullyAuthenticated()
+        .and()
+        .formLogin().loginPage("/index.html")
+        .loginProcessingUrl("/login")
+        .defaultSuccessUrl("/success.html")
+        .failureUrl("/loginfailed.html")
+        .usernameParameter("username").passwordParameter("password")                
+        .and()
+            .logout().logoutUrl("/logout").logoutSuccessUrl("/logout.html");
         //.permitAll()  //this permits all requests       
-        .and().httpBasic();
         httpSecurity.csrf().disable();
     }
 }
