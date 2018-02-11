@@ -11,15 +11,19 @@
 package com.example.security.basic.config;
 
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 
 @EnableWebSecurity
+@EnableAutoConfiguration
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
     @Override
@@ -35,10 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     {
         httpSecurity        
         .authorizeRequests()
-        .antMatchers("**/demo").hasRole("USER")
+        .antMatchers("/hello/").hasRole("ADMIN")
+        .antMatchers("/demo/").hasRole("USER")
+        .antMatchers("/allowall/").hasAnyRole("ADMIN", "USER")
         .anyRequest()
-        //.permitAll()  this permits all requests
         .fullyAuthenticated()
+        //.permitAll()  //this permits all requests       
         .and().httpBasic();
         httpSecurity.csrf().disable();
     }

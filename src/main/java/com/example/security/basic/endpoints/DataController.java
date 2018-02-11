@@ -15,12 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rest/hello")
 public class DataController
 {
-    @GetMapping("/")
+    @GetMapping("/hello/")
     public String hello()
     {
         return "Hello";
+    }
+    
+    @GetMapping("/allowall/")
+    public String allowAll()
+    {
+        return "Allow both roles";
     }
 }
